@@ -1,6 +1,6 @@
 import discord
-import asyncio
 import random
+import os
 from discord.ext import commands
 
 from music import Music
@@ -8,9 +8,10 @@ from league import League, API_KEY
 import pycurl
 import certifi
 
+TOKEN = os.environ.get("DISCORD_TOKEN")
+
 curl = pycurl.Curl()
 curl.setopt(pycurl.CAINFO, certifi.where())
-
 
 if not discord.opus.is_loaded():
     # the 'opus' library here is opus.dll on windows
@@ -20,15 +21,18 @@ if not discord.opus.is_loaded():
     # note that on windows this DLL is automatically provided for you
     discord.opus.load_opus('opus')
 
-
-bot = commands.Bot(command_prefix=commands.when_mentioned_or('!'), description='Da Music bot that hates Greg for some reason!')
+bot = commands.Bot(
+    command_prefix=commands.when_mentioned_or('!'),
+    description='Da Music bot that hates Greg for some reason!')
 bot.add_cog(Music(bot))
 bot.add_cog(League(bot))
 
 
 @bot.event
 async def on_ready():
-    print(f'Logged in as:\n{bot.user} (ID: {bot.user.id}, API_KEY {API_KEY})')
+    print(
+        f'Logged in as:\n{bot.user} (ID: {bot.user.id}, API_KEY {bool(API_KEY)}'
+    )
 
 
 @bot.event
@@ -52,4 +56,5 @@ async def roll(ctx, max_roll):
     roll = random.randrange(0, int(max_roll))
     await bot.say(f'{ctx.message.author} rolls a {roll}')
 
-bot.run('MjM1OTE1MDAzOTgxNTk0NjI2.Dk_w6A.hW0P5er4t1ahYTA6H3CNVZnaVdM')
+
+bot.run(TOKEN)

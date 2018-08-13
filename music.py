@@ -11,7 +11,6 @@ if not discord.opus.is_loaded():
     discord.opus.load_opus('opus')
 
 
-
 class VoiceEntry:
     def __init__(self, message, player):
         self.requester = message.author
@@ -22,7 +21,8 @@ class VoiceEntry:
         fmt = '*{0.title}* uploaded by {0.uploader} and requested by {1.display_name}'
         duration = self.player.duration
         if duration:
-            fmt = fmt + ' [length: {0[0]}m {0[1]}s]'.format(divmod(duration, 60))
+            fmt = fmt + ' [length: {0[0]}m {0[1]}s]'.format(
+                divmod(duration, 60))
         return fmt.format(self.player, self.requester)
 
 
@@ -33,7 +33,7 @@ class VoiceState:
         self.bot = bot
         self.play_next_song = asyncio.Event()
         self.songs = asyncio.Queue()
-        self.skip_votes = set() # a set of user_ids that voted
+        self.skip_votes = set()  # a set of user_ids that voted
         self.audio_player = self.bot.loop.create_task(self.audio_player_task())
 
     def is_playing(self):
@@ -59,7 +59,8 @@ class VoiceState:
         while True:
             self.play_next_song.clear()
             self.current = await self.songs.get()
-            await self.bot.send_message(self.current.channel, 'Now playing ' + str(self.current))
+            await self.bot.send_message(self.current.channel,
+                                        'Now playing ' + str(self.current))
             self.current.player.start()
             await self.play_next_song.wait()
 
@@ -68,6 +69,7 @@ class Music:
     """Voice related commands.
     Works in multiple servers at once.
     """
+
     def __init__(self, bot):
         self.bot = bot
         self.voice_states = {}
@@ -91,11 +93,11 @@ class Music:
                 state.audio_player.cancel()
                 if state.voice:
                     self.bot.loop.create_task(state.voice.disconnect())
-            except:
+            except Exception:
                 pass
 
     @commands.command(pass_context=True, no_pm=True)
-    async def join(self, ctx, *, channel : discord.Channel):
+    async def join(self, ctx, *, channel: discord.Channel):
         """Joins a voice channel."""
         try:
             await self.create_voice_client(channel)
@@ -123,7 +125,7 @@ class Music:
         return True
 
     @commands.command(pass_context=True, no_pm=True)
-    async def play(self, ctx, *, song : str):
+    async def play(self, ctx, *, song: str):
         """Plays a song.
         If there is a song currently in the queue, then it is
         queued until the next song is done playing.
@@ -143,10 +145,12 @@ class Music:
                 return
 
         try:
-            player = await state.voice.create_ytdl_player(song, ytdl_options=opts, after=state.toggle_next)
+            player = await state.voice.create_ytdl_player(
+                song, ytdl_options=opts, after=state.toggle_next)
         except Exception as e:
             fmt = 'An error occurred while processing this request: ```py\n{}: {}\n```'
-            await self.bot.send_message(ctx.message.channel, fmt.format(type(e).__name__, e))
+            await self.bot.send_message(ctx.message.channel,
+                                        fmt.format(type(e).__name__, e))
         else:
             player.volume = 0.05
             entry = VoiceEntry(ctx.message, player)
@@ -154,14 +158,15 @@ class Music:
             await state.songs.put(entry)
 
     @commands.command(pass_context=True, no_pm=True)
-    async def volume(self, ctx, value : int):
+    async def volume(self, ctx, value: int):
         """Sets the volume of the currently playing song."""
 
         state = self.get_voice_state(ctx.message.server)
         if state.is_playing():
             player = state.player
             player.volume = value / 100
-            await self.bot.say('Set the volume to {:.0%}'.format(player.volume))
+            await self.bot.say('Set the volume to {:.0%}'.format(
+                player.volume))
 
     @commands.command(pass_context=True, no_pm=True)
     async def pause(self, ctx):
@@ -195,7 +200,7 @@ class Music:
             state.audio_player.cancel()
             del self.voice_states[server.id]
             await state.voice.disconnect()
-        except:
+        except Exception:
             pass
 
     @commands.command(pass_context=True, no_pm=True)
@@ -220,7 +225,8 @@ class Music:
                 await self.bot.say('Skip vote passed, skipping song...')
                 state.skip()
             else:
-                await self.bot.say('Skip vote added, currently at [{}/3]'.format(total_votes))
+                await self.bot.say(
+                    'Skip vote added, currently at [{}/3]'.format(total_votes))
         else:
             await self.bot.say('You have already voted to skip this song.')
 
@@ -233,4 +239,5 @@ class Music:
             await self.bot.say('Not playing anything.')
         else:
             skip_count = len(state.skip_votes)
-            await self.bot.say('Now playing {} [skips: {}/3]'.format(state.current, skip_count))
+            await self.bot.say('Now playing {} [skips: {}/3]'.format(
+                state.current, skip_count))

@@ -83,3 +83,23 @@ class League:
             ctx.message.channel,
             f"{person} has a win rate of **{winrate}%** with {wins} wins over {total_games} games this week. "
         )
+
+    @commands.command(pass_context=True, no_pm=True)
+    async def matches(self, ctx, person, num_games: int = 10):
+        summoner = Summoner(name=person, region="NA")
+        match_history = summoner.match_history
+        match_history = match_history[:num_games]
+        await self.bot.say("Digging through the chronicles of Runeterra...")
+        msg = []
+        for match in match_history:
+            result = ""
+            champ = match.participants[summoner].champion.name
+            if match.participants[summoner].team.win:
+                result = "Win: "
+            else:
+                result = "Loss:"
+            msg.append(f"{result} {champ}")
+        bot_text = "\n".join(msg)
+        await self.bot.say(f"ahh here it is! \n\n```{bot_text}```")
+        # TODO add K/D/A
+        # TODO add longest streak

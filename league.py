@@ -44,7 +44,7 @@ class League:
             data = []
             data.append(["Red Team", "Blue Team"])
 
-            for x in range(5):
+            for x in range(len(red_team)):
                 data.append(
                     [red_team[x].summoner.name, blue_team[x].summoner.name])
 
@@ -122,5 +122,3 @@ class League:
         table = SingleTable(data)
 
         await self.bot.say(f"ahh here it is! \n\n```{table.table}```")
-
-        # TODO add longest streak

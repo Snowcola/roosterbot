@@ -14,11 +14,7 @@ curl = pycurl.Curl()
 curl.setopt(pycurl.CAINFO, certifi.where())
 
 if not discord.opus.is_loaded():
-    # the 'opus' library here is opus.dll on windows
-    # or libopus.so on linux in the current directory
-    # you should replace this with the location the
-    # opus library is located in and with the proper filename.
-    # note that on windows this DLL is automatically provided for you
+
     discord.opus.load_opus('opus')
 
 bot = commands.Bot(

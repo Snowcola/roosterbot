@@ -19,6 +19,17 @@ class League:
     def __init__(self, bot):
         self.bot = bot
 
+    def convertMultikill(killnum):
+        switcher = {
+            0: "No Kills :(",
+            1: "single",
+            2: "double",
+            3: "triple",
+            4: "quadra",
+            5: "penta"
+        }
+        return switcher.get(killnum, "")
+
     @commands.command(pass_context=True, no_pm=True)
     async def game(self, ctx, person):
         """Shows the current game and who is in it"""
@@ -98,7 +109,7 @@ class League:
         await self.bot.say("Digging through the chronicles of Runeterra...")
 
         data = []
-        data.append(["W/L", "Champion", "K/D/A"])
+        data.append(["W/L", "Champion", "K/D/A", "Multikill", "CS"])
         for match in match_history:
             result = ""
             champ = match.participants[summoner].champion.name
@@ -106,12 +117,14 @@ class League:
             k = stats.kills
             d = stats.deaths
             a = stats.assists
+            spree = convertMultikill(stats.largestMultiKill)
+            cs = stats.totalMinionsKilled
 
             if match.participants[summoner].team.win:
                 result = "Win "
             else:
                 result = "Loss"
-            data.append([result, champ, f"{k}/{d}/{a}"])
+            data.append([result, champ, f"{k}/{d}/{a}", spree, cs])
 
         table = SingleTable(data)
 

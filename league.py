@@ -5,6 +5,7 @@ import os
 import cassiopeia as cass
 from cassiopeia import Summoner
 from discord.ext import commands
+from terminaltables import SingleTable
 
 if not discord.opus.is_loaded():
     discord.opus.load_opus('opus')
@@ -86,20 +87,34 @@ class League:
 
     @commands.command(pass_context=True, no_pm=True)
     async def matches(self, ctx, person, num_games: int = 10):
+        """Gets match history of a summoner
+
+        Usage:
+            !matches snowcola 15
+        """
         summoner = Summoner(name=person, region="NA")
         match_history = summoner.match_history
         match_history = match_history[:num_games]
         await self.bot.say("Digging through the chronicles of Runeterra...")
-        msg = []
+
+        data = []
+        data.append(["W/L", "Champion", "K/D/A"])
         for match in match_history:
             result = ""
             champ = match.participants[summoner].champion.name
+            stats = match.participants[summoner].stats
+            k = stats.kills
+            d = stats.deaths
+            a = stats.assists
+
             if match.participants[summoner].team.win:
-                result = "Win: "
+                result = "Win "
             else:
-                result = "Loss:"
-            msg.append(f"{result} {champ}")
-        bot_text = "\n".join(msg)
-        await self.bot.say(f"ahh here it is! \n\n```{bot_text}```")
-        # TODO add K/D/A
+                result = "Loss"
+            data.append([result, champ, f"{k}/{d}/{a}"])
+
+        table = SingleTable(data)
+
+        await self.bot.say(f"ahh here it is! \n\n```{table.table}```")
+
         # TODO add longest streak

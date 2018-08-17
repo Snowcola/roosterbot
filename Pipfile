@@ -8,6 +8,7 @@ name = "pypi"
 youtube-dl = "*"
 cassiopeia = "*"
 certifi = "*"
+terminaltables = "*"
 
 [dev-packages]
 "flake8" = "*"

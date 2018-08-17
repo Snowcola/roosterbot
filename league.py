@@ -34,7 +34,6 @@ class League:
     async def game(self, ctx, person):
         """Shows the current game and who is in it"""
         try:
-            # summoner = cass.get_summoner(name=person)
             player = Summoner(name=person, region="NA")
             match = player.current_match()
             gametype = match.queue
@@ -52,22 +51,8 @@ class League:
             table = SingleTable(data)
             response = f""" Current Game:
 
-            **{person} is {duration} into a {gametype.value} game**\n\n{table.table}"""
-            """ 
-            **Red Team:**
-            {red_team[0].summoner.name}
-            {red_team[1].summoner.name}
-            {red_team[2].summoner.name}
-            {red_team[3].summoner.name}
-            {red_team[4].summoner.name}
+            **{person} is {duration} into a {gametype.value} game**\n\n```{table.table}```"""
 
-            **Blue Team:**
-            {blue_team[0].summoner.name}
-            {blue_team[1].summoner.name}
-            {blue_team[2].summoner.name}
-            {blue_team[3].summoner.name}
-            {blue_team[4].summoner.name}
-            """
             await self.bot.send_message(ctx.message.channel, response)
 
         except ValueError as e:

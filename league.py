@@ -42,10 +42,18 @@ class League:
             red_team = match.red_team().participants
             duration = match.duration
 
+            data = []
+            data.append(["Red Team", "Blue Team"])
+
+            for x in range(5):
+                data.append(
+                    [red_team[x].summoner.name, blue_team[x].summoner.name])
+
+            table = SingleTable(data)
             response = f""" Current Game:
 
-            **{person} is {duration} into a {gametype.value} game**
-
+            **{person} is {duration} into a {gametype.value} game**\n\n{table.table}"""
+            """ 
             **Red Team:**
             {red_team[0].summoner.name}
             {red_team[1].summoner.name}
@@ -58,8 +66,8 @@ class League:
             {blue_team[1].summoner.name}
             {blue_team[2].summoner.name}
             {blue_team[3].summoner.name}
-            {blue_team[4].summoner.name}"""
-
+            {blue_team[4].summoner.name}
+            """
             await self.bot.send_message(ctx.message.channel, response)
 
         except ValueError as e:
@@ -117,7 +125,7 @@ class League:
             k = stats.kills
             d = stats.deaths
             a = stats.assists
-            spree = convertMultikill(stats.largestMultiKill)
+            spree = self.convertMultikill(stats.largestMultiKill)
             cs = stats.totalMinionsKilled
 
             if match.participants[summoner].team.win:

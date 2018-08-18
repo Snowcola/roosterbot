@@ -165,7 +165,7 @@ class Music:
             player = state.player
             player.volume = value / 10
             await self.bot.say('Set the volume to {:.0%}'.format(
-                player.volume * 10))
+                player.volume / 10))
 
     @commands.command(pass_context=True, no_pm=True)
     async def pause(self, ctx):

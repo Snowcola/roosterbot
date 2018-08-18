@@ -6,7 +6,7 @@ import pprint
 import cassiopeia as cass
 from cassiopeia import Summoner
 from discord.ext import commands
-from terminaltables import SingleTable
+from terminaltables import DoubleTable as SingleTable
 
 if not discord.opus.is_loaded():
     discord.opus.load_opus('opus')

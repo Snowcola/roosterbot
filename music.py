@@ -1,6 +1,9 @@
 import discord
 import asyncio
+import os
 from discord.ext import commands
+
+PROD = os.environ.get("PROD", True)
 
 if not discord.opus.is_loaded():
     discord.opus.load_opus('opus')
@@ -145,7 +148,10 @@ class Music:
             await self.bot.send_message(ctx.message.channel,
                                         fmt.format(type(e).__name__, e))
         else:
-            player.volume = 0.05
+            if PROD:
+                player.volume = 1
+            else:
+                player.volume = 0.05
             entry = VoiceEntry(ctx.message, player)
             await self.bot.say('Added song to playlist: ' + str(entry))
             await state.songs.put(entry)

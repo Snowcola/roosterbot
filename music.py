@@ -149,7 +149,7 @@ class Music:
                                         fmt.format(type(e).__name__, e))
         else:
             if PROD:
-                player.volume = 1
+                player.volume = 6
             else:
                 player.volume = 0.05
             entry = VoiceEntry(ctx.message, player)
@@ -163,9 +163,9 @@ class Music:
         state = self.get_voice_state(ctx.message.server)
         if state.is_playing():
             player = state.player
-            player.volume = value / 100
+            player.volume = value / 10
             await self.bot.say('Set the volume to {:.0%}'.format(
-                player.volume))
+                player.volume * 10))
 
     @commands.command(pass_context=True, no_pm=True)
     async def pause(self, ctx):

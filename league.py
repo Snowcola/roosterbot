@@ -2,6 +2,7 @@ import discord
 import arrow
 import datetime
 import os
+import pprint
 import cassiopeia as cass
 from cassiopeia import Summoner
 from discord.ext import commands
@@ -19,7 +20,7 @@ class League:
     def __init__(self, bot):
         self.bot = bot
 
-    def convertMultikill(killnum):
+    def convertMultikill(self, killnum):
         switcher = {
             0: "No Kills :(",
             1: "single",
@@ -102,7 +103,8 @@ class League:
         await self.bot.say("Digging through the chronicles of Runeterra...")
 
         data = []
-        data.append(["W/L", "Champion", "K/D/A", "Multikill", "CS"])
+        data.append(
+            ["W/L", "Champion", "K/D/A", "Multikill", "CS", "Gold Earned"])
         for match in match_history:
             result = ""
             champ = match.participants[summoner].champion.name
@@ -110,14 +112,15 @@ class League:
             k = stats.kills
             d = stats.deaths
             a = stats.assists
-            spree = self.convertMultikill(stats.largestMultiKill)
-            cs = stats.totalMinionsKilled
+            spree = self.convertMultikill(stats.largest_multi_kill)
+            cs = stats.total_minions_killed + stats.neutral_minions_killed
+            gold = "{:,}".format(stats.gold_earned)
 
             if match.participants[summoner].team.win:
                 result = "Win "
             else:
                 result = "Loss"
-            data.append([result, champ, f"{k}/{d}/{a}", spree, cs])
+            data.append([result, champ, f"{k}/{d}/{a}", spree, cs, gold])
 
         table = SingleTable(data)
 

@@ -27,7 +27,7 @@ bot.add_cog(League(bot))
 @bot.event
 async def on_ready():
     print(
-        f'Logged in as:\n{bot.user} (ID: {bot.user.id}, API_KEY {bool(API_KEY)}'
+        f'Logged in as:\n{bot.user} (ID: {bot.user.id}, API_KEY {bool(API_KEY)})'
     )
 
 

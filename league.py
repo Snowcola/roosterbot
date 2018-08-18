@@ -2,7 +2,6 @@ import discord
 import arrow
 import datetime
 import os
-import pprint
 import cassiopeia as cass
 from cassiopeia import Summoner
 from discord.ext import commands
@@ -125,3 +124,13 @@ class League:
         table = SingleTable(data)
 
         await self.bot.say(f"ahh here it is! \n\n```{table.table}```")
+
+    @commands.command(pass_context=True, no_pm=True)
+    async def rank(self, ctx, person):
+        """Gets the current rank of a summoner"""
+
+        summoner = Summoner(name=person, region="NA")
+        positions = summoner.league_positions
+        rank = f"{positions.fives.tier} {positions.fives.division}"
+
+        await self.bot.say(f"{person} is in **{rank}**")

@@ -17,7 +17,11 @@ class SimC:
         self.simc = simc_path
         if platform.system() == "Windows":
             self.simc += ".exe"
-        self.data = DotMap()
+        try:
+            json_data = open("results.json").read()
+            self.data = DotMap(json.loads(json_data))
+        except:
+            pass
 
     def run_sim(self,
                 armory,
@@ -55,6 +59,10 @@ class SimC:
 
         return PAWN_String
 
+    def get_DPS(self):
+        dps = self.data.sim.statistics.raid_dps.mean
+        return round(dps)
+
 
 main = SimC("bot", "C:\Simulationcraft(x64)\801-01\simc")
 
@@ -68,6 +76,5 @@ player_info = {
     "spec": player["specialization"].split()[0],
     "class": player["specialization"].split()[1]
 }
-print(scale_factors)
-print(player_info)
-print(main.get_PAWN_String())
+
+print(main.get_DPS())

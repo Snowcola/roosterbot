@@ -16,19 +16,6 @@ cass.set_default_region("NA")
 person = "snowcola"
 summoner = Summoner(name=person, region="NA")
 
-last_week = datetime.datetime.now() - datetime.timedelta(weeks=1)
-year = last_week.year
-month = last_week.month
-day = last_week.day
-matchhistory = cass.MatchHistory(
-    summoner=summoner,
-    begin_time=arrow.Arrow(year, month, day),
-    end_time=arrow.now())
-
-wins = 0
-total_games = len(matchhistory)
-for match in matchhistory:
-    if match.participants[summoner].team.win:
-        wins += 1
-
-print(f"{wins}   {total_games}  {wins/total_games*100}")
+positions = summoner.league_positions
+print(f"{positions.fives.tier} {positions.fives.division}")
+#print(f"{wins}   {total_games}  {wins/total_games*100}")

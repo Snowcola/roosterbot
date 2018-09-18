@@ -9,6 +9,8 @@ youtube-dl = "*"
 cassiopeia = "*"
 certifi = "*"
 terminaltables = "*"
+"beautifulsoup4" = "*"
+dotmap = "*"
 
 [dev-packages]
 "flake8" = "*"

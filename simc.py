@@ -1,5 +1,4 @@
 import subprocess
-import urllib
 import platform
 import json
 from dotmap import DotMap
@@ -18,6 +17,7 @@ class SimC:
         self.simc = simc_path
         if platform.system() == "Windows":
             self.simc += ".exe"
+        self.data = DotMap()
 
     def run_sim(self,
                 armory,
@@ -30,11 +30,12 @@ class SimC:
             f"calculate_scale_factors={calculate_scale_factors}",
             f"html={html}", f"json2={json}"
         ])
+        json_data = open("results.json").read()
+        self.data = DotMap(json.loads(json_data))
         return sim
 
     def get_PAWN_String(self):
-        json_data = open("results.json").read()
-        sim = DotMap(json.loads(json_data))
+        sim = self.data
         scale_factors = sim.sim.players[0].scale_factors
         player = sim.sim.players[0]
         player_info = {

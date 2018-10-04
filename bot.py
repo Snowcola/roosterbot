@@ -41,6 +41,7 @@ async def on_member_join(member):
 @bot.event
 async def on_voice_state_update(before, after):
     matt = "bobbelly8463".casefold()
+    greg = "inbetweenis8163".casefold()
     unique_user = str(after.name + after.discriminator).casefold()
 
     if before.voice.voice_channel is None and after.voice.voice_channel is not None:
@@ -48,7 +49,7 @@ async def on_voice_state_update(before, after):
             if channel.name == 'fieldsofjustice':
                 msg = await bot.send_message(
                     channel,
-                    f"Howdy {before.mention}",
+                    f"Howdy {before.mention} :wave:",
                 )
 
                 if unique_user == matt:
@@ -60,6 +61,12 @@ async def on_voice_state_update(before, after):
                     player.start()
                     await asyncio.sleep(20)
                     player.stop()
+
+                if unique_user == greg:
+                    await bot.send_message(
+                        channel,
+                        f"Ewww it's {before.mention} :poop:",
+                    )
 
                 await asyncio.sleep(10)
                 await bot.delete_message(msg)

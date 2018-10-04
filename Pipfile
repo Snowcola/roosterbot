@@ -11,6 +11,7 @@ certifi = "*"
 terminaltables = "*"
 "beautifulsoup4" = "*"
 dotmap = "*"
+asyncio = "*"
 
 [dev-packages]
 "flake8" = "*"
